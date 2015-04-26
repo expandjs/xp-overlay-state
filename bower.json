@@ -1,7 +1,7 @@
 {
   "name": "xp-overlay-state",
   "license": "BSD-3-Clause",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "This element is used to add overlay capabilities on the context element.",
   "homepage": "http://www.expandjs.com/elements/xp-overlay-state",
   "authors": [
