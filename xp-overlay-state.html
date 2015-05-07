@@ -157,31 +157,37 @@ It extends the native html `template`.
 
             // OBSERVER
             showedChanged: function (pre, post) {
-
-                // Vars
                 var self = this;
-
-                // Function
-                function distinguish (event) {
-                    event.overlays = event.overlays || [];
-                    event.overlays.push(self);
-                }
-
-                // Function
-                function hide (event) {
-                    if (event.overlays && XP.includes(event.overlays, self)) { return; }
-                    if ((self.autoHideDisabled || event.keyCode) && event.keyCode !== 27) { return; }
-                    XP.unlisten({click: hide, keyup: hide});
-                    XP.unlisten(self, {click: distinguish});
-                    self.hide();
-                }
-
-                // Listening
-                if (post) { XP.listen({click: hide, keyup: hide}); }
-                if (post) { XP.listen(self.context, {click: distinguish}); }
-
-                // Firing
+                XP[post ? 'listen' : 'unlisten']({click: self.handleHideBound, keyup: self.handleHideBound});
+                XP[post ? 'listen' : 'unlisten'](self.context, {click: self.handleDistinguishBound});
                 self.context.fire('xp-toggle', {firer: self.context, isShowed: post});
+            },
+
+            /*********************************************************************/
+
+            // LISTENER
+            ready: function () {
+                var self = this;
+                self.handleDistinguishBound = self.handleDistinguish.bind(self);
+                self.handleHideBound        = self.handleHide.bind(self);
+            },
+
+            /*********************************************************************/
+
+            // HANDLER
+            handleDistinguish: function (event) {
+                event.overlays = event.overlays || [];
+                event.overlays.push(this);
+            },
+
+            // HANDLER
+            handleHide: function (event) {
+                var self = this;
+                if (event.overlays && XP.includes(event.overlays, self)) { return; }
+                if ((self.autoHideDisabled || event.keyCode) && event.keyCode !== 27) { return; }
+                XP.unlisten({click: self.handleHideBound, keyup: self.handleHideBound});
+                XP.unlisten(self, {click: self.handleDistinguishBound});
+                self.hide();
             }
         });
     </script>
