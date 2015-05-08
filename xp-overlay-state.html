@@ -157,10 +157,18 @@ It extends the native html `template`.
 
             // OBSERVER
             showedChanged: function (pre, post) {
+
+                // Vars
                 var self = this;
-                XP[post ? 'listen' : 'unlisten']({click: self.handleHideBound, keyup: self.handleHideBound});
-                XP[post ? 'listen' : 'unlisten'](self.context, {click: self.handleDistinguishBound});
+
+                // Firing
                 self.context.fire('xp-toggle', {firer: self.context, isShowed: post});
+
+                // Listening
+                XP.delay(function () {
+                    XP[post ? 'listen' : 'unlisten']({click: self.handleHideBound, keyup: self.handleHideBound});
+                    XP[post ? 'listen' : 'unlisten'](self.context, {click: self.handleDistinguishBound});
+                });
             },
 
             /*********************************************************************/
